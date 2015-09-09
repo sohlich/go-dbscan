@@ -89,7 +89,7 @@ func TestExpandCluster(t *testing.T) {
 }
 
 func TestClusterize(t *testing.T) {
-	log.Println("Executing TestExpandCluster")
+	log.Println("Executing TestClusterize")
 	clusterList := []Clusterable{
 		&SimpleClusterable{1},
 		&SimpleClusterable{2},
@@ -101,6 +101,13 @@ func TestClusterize(t *testing.T) {
 	}
 	clusters := Clusterize(clusterList)
 	assertEquals(t, 2, len(clusters))
+}
+
+func TestClusterizeNoData(t *testing.T) {
+	log.Println("Executing TestClusterizeNoData")
+	clusterList := []Clusterable{}
+	clusters := Clusterize(clusterList)
+	assertEquals(t, 0, len(clusters))
 }
 
 //Assert function. If  the expected value not equals result, function

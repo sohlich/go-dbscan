@@ -1,9 +1,5 @@
 package dbscan
 
-import (
-	"log"
-)
-
 var Eps = 0.2
 var minPts = 3
 
@@ -73,12 +69,11 @@ func expandCluster(cluster Cluster, neighbours []Clusterable, visited map[Cluste
 }
 
 func merge(one []Clusterable, two []Clusterable) []Clusterable {
-	merMap := make(map[Clusterable]bool)
-	putAll(merMap, one)
-	putAll(merMap, two)
-
+	mergeMap := make(map[Clusterable]bool)
+	putAll(mergeMap, one)
+	putAll(mergeMap, two)
 	merged := make([]Clusterable, 0)
-	for key := range merMap {
+	for key := range mergeMap {
 		merged = append(merged, key)
 	}
 
