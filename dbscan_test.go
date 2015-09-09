@@ -43,8 +43,8 @@ func TestFindNeighbours(t *testing.T) {
 		&SimpleClusterable{2},
 	}
 
-	Eps = 1
-	neighbours := findNeighbours(clusterList[0], clusterList)
+	eps := 1.0
+	neighbours := findNeighbours(clusterList[0], clusterList, eps)
 
 	assertEquals(t, 1, len(neighbours))
 }
@@ -81,10 +81,11 @@ func TestExpandCluster(t *testing.T) {
 		&SimpleClusterable{5},
 	}
 
-	Eps = 1
+	eps := 1.0
+	minPts := 3
 	visitMap := make(map[Clusterable]bool)
 	cluster := make(Cluster, 0)
-	cluster = expandCluster(cluster, clusterList, visitMap)
+	cluster = expandCluster(cluster, clusterList, visitMap, minPts, eps)
 	assertEquals(t, expected, len(cluster))
 }
 
@@ -99,14 +100,18 @@ func TestClusterize(t *testing.T) {
 		&SimpleClusterable{4},
 		&SimpleClusterable{5},
 	}
-	clusters := Clusterize(clusterList)
+	eps := 1.0
+	minPts := 3
+	clusters := Clusterize(clusterList, minPts, eps)
 	assertEquals(t, 2, len(clusters))
 }
 
 func TestClusterizeNoData(t *testing.T) {
 	log.Println("Executing TestClusterizeNoData")
 	clusterList := []Clusterable{}
-	clusters := Clusterize(clusterList)
+	eps := 1.0
+	minPts := 3
+	clusters := Clusterize(clusterList, minPts, eps)
 	assertEquals(t, 0, len(clusters))
 }
 

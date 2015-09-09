@@ -1,6 +1,6 @@
 package dbscan
 
-var Eps = 0.2
+var eps = 0.2
 var minPts = 3
 
 const (
@@ -15,16 +15,16 @@ type Clusterable interface {
 
 type Cluster []Clusterable
 
-func Clusterize(objects []Clusterable) []Cluster {
+func Clusterize(objects []Clusterable, minPts int, eps float64) []Cluster {
 	clusters := make([]Cluster, 0)
 	visited := map[Clusterable]bool{}
 	for _, point := range objects {
-		neighbours := findNeighbours(point, objects)
+		neighbours := findNeighbours(point, objects, eps)
 		if len(neighbours) >= minPts {
 			visited[point] = CLUSTERED
 			cluster := make(Cluster, 1)
 			cluster[0] = point
-			cluster = expandCluster(cluster, neighbours, visited)
+			cluster = expandCluster(cluster, neighbours, visited, minPts, eps)
 			clusters = append(clusters, cluster)
 		} else {
 			visited[point] = NOISE
@@ -36,10 +36,10 @@ func Clusterize(objects []Clusterable) []Cluster {
 //Finds the neighbours from given array
 //depends on Eps variable, which determines
 //the distance limit from the point
-func findNeighbours(point Clusterable, points []Clusterable) []Clusterable {
+func findNeighbours(point Clusterable, points []Clusterable, eps float64) []Clusterable {
 	neighbours := make([]Clusterable, 0)
 	for _, potNeigb := range points {
-		if point != potNeigb && potNeigb.Distance(point) <= Eps {
+		if point != potNeigb && potNeigb.Distance(point) <= eps {
 			neighbours = append(neighbours, potNeigb)
 		}
 	}
@@ -47,13 +47,13 @@ func findNeighbours(point Clusterable, points []Clusterable) []Clusterable {
 }
 
 //Try to expand existing clutser
-func expandCluster(cluster Cluster, neighbours []Clusterable, visited map[Clusterable]bool) Cluster {
+func expandCluster(cluster Cluster, neighbours []Clusterable, visited map[Clusterable]bool, minPts int, eps float64) Cluster {
 	seed := make([]Clusterable, len(neighbours))
 	copy(seed, neighbours)
 	for _, point := range seed {
 		pointState, isVisited := visited[point]
 		if !isVisited {
-			currentNeighbours := findNeighbours(point, seed)
+			currentNeighbours := findNeighbours(point, seed, eps)
 			if len(currentNeighbours) >= minPts {
 				cluster = merge(cluster, currentNeighbours)
 			}
