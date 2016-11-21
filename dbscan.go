@@ -1,16 +1,12 @@
 package dbscan
 
-var eps = 0.2
-var minPts = 3
-
 const (
 	NOISE     = false
 	CLUSTERED = true
 )
 
 type Clusterable interface {
-	Distance(c Clusterable) float64
-	GetParams() []float64
+	Distance(c interface{}) float64
 }
 
 type Cluster []Clusterable
